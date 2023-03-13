@@ -1,6 +1,6 @@
 CC=gcc
 CFLAGS=-Wall -Wextra -g -Og -lSDL2
-CFILES=main.c drawing.c
+CFILES=main.c drawing.c sorting.c
 DEPS=dimensions.h
 OBJECTS=main.o
 SRC=.
