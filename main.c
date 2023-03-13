@@ -79,7 +79,7 @@ void drawBars(SDL_Renderer *renderer, u32 bars[], int barsLength, int swapIndex1
 	SDL_RenderPresent(renderer);
 }
 
-void drawSortedBars(SDL_Renderer *renderer, u32 bars[], int barsLength, Uint32 delayMiliseconds) {
+void drawSortedBars(SDL_Renderer *renderer, u32 bars[], int barsLength) {
 	clearScreen(renderer);
 
 	int dw = WIDTH / barsLength;
