@@ -114,7 +114,7 @@ void sortBarsVisualizer(SDL_Renderer *renderer, u32 bars[], int barsLength) {
 		}
 	} while (swaps != 0);
 
-	drawSortedBars(renderer, bars, barsLength, 50);
+	drawSortedBars(renderer, bars, barsLength);
 }
 
 int main(void) {
