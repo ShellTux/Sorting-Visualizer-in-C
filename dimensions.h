@@ -1,2 +1,3 @@
-#define WIDTH 1320
-#define HEIGHT 662
+#define WIDTH 1634
+#define HEIGHT 944
+#define BARS 30

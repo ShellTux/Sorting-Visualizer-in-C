@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-Wall -Wextra -g -Og -lSDL2
-CFILES=main.c
-DEPS=
+CFILES=main.c drawing.c
+DEPS=dimensions.h
 OBJECTS=main.o
 SRC=.
 SOURCE=$(wildcard $(SRC)/*.c)
@@ -11,13 +11,13 @@ all: main.o run
 %:%.o
 	$(CC) $(CFLAGS) -o $@ $^ $(DEPS) 
 
-%.o:%.c
+%.o:%.c $(DEPS)
 	@printf "\n"
 	@printf "##################\n"
 	@printf "Building %s\n" $@
 	@printf "##################\n"
 	@printf "\n"
-	$(CC) $(CFLAGS) -o $@ $^ $(DEPS)
+	$(CC) $(CFLAGS) -o $@ $(CFILES)
 
 %.s: %.c
 	$(CC) -S $^
