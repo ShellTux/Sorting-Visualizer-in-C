@@ -8,10 +8,10 @@
 #include <SDL2/SDL_video.h>
 #include <stdlib.h>
 #include <time.h>
+#include "dimensions.h"
 
-#define WIDTH 1634
-#define HEIGHT 944
-#define BARS 30
+#define BARS 100
+#define DELAY 10
 
 typedef unsigned int u32 ;
 
@@ -41,11 +41,24 @@ void randomizeBars(u32 bars[], int size) {
 	}
 }; 
 
-void drawBars(SDL_Renderer *renderer, u32 bars[], int barsLength) {
+void clearScreen(SDL_Renderer *renderer) {
 	// Clear screen
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
 	SDL_RenderClear(renderer);
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+}
+
+void drawBar(SDL_Renderer *renderer, int x, int y, int width, int height, Uint8 colorRed, Uint8 colorGreen, Uint8 colorBlue) {
+	SDL_Rect rectangle;
+	rectangle.w = width;
+	rectangle.h = height;
+	rectangle.x = x;
+	rectangle.y = y;
+	SDL_SetRenderDrawColor(renderer, colorRed, colorGreen, colorBlue, SDL_ALPHA_OPAQUE);
+	SDL_RenderFillRect(renderer, &rectangle);
+}
+
+void drawBars(SDL_Renderer *renderer, u32 bars[], int barsLength, int swapIndex1, int swapIndex2) {
+	clearScreen(renderer);
 
 	SDL_Rect rectangle;
 	rectangle.w = WIDTH / barsLength;
@@ -54,11 +67,26 @@ void drawBars(SDL_Renderer *renderer, u32 bars[], int barsLength) {
 		rectangle.x = i * rectangle.w;
 		rectangle.y = HEIGHT - bars[i];
 		rectangle.h = bars[i];
+
+		if (i == swapIndex1 || i == swapIndex2)
+			SDL_SetRenderDrawColor(renderer, 28, 219, 61, SDL_ALPHA_OPAQUE);
+		else
+			SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+
 		SDL_RenderFillRect(renderer, &rectangle);
 	}
 
 	// Update
 	SDL_RenderPresent(renderer);
+}
+
+void drawSortedBars(SDL_Renderer *renderer, u32 bars[], int barsLength) {
+	clearScreen(renderer);
+
+	int dw = WIDTH / barsLength;
+	for (int i = 0; i < barsLength; ++i) {
+		drawBar(renderer, i * dw, HEIGHT - bars[i], dw, bars[i], 0, 255, 0);
+	}
 }
 
 void sortBarsVisualizer(SDL_Renderer *renderer, u32 bars[], int barsLength) {
@@ -67,24 +95,26 @@ void sortBarsVisualizer(SDL_Renderer *renderer, u32 bars[], int barsLength) {
 	SDL_RenderClear(renderer);
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 
-	drawBars(renderer, bars, barsLength);
+	drawBars(renderer, bars, barsLength, -1, -1);
 
 	int swaps;
 	do {
 		swaps = 0;
 		for (int i = 0; i < barsLength - 1; ++i) {
-			SDL_Delay(50);
 			if (bars[i + 1] >= bars[i]) continue;
+			SDL_Delay(DELAY);
 
 			// Swap
 			++swaps;
 			u32 temp = bars[i];
 			bars[i] = bars[i + 1];
 			bars[i + 1] = temp;
-			drawBars(renderer, bars, barsLength);
+			drawBars(renderer, bars, barsLength, i, i + 1);
 
 		}
 	} while (swaps != 0);
+
+	drawSortedBars(renderer, bars, barsLength);
 }
 
 int main(void) {
