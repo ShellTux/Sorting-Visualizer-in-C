@@ -5,13 +5,12 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_timer.h>
-#include <SDL2/SDL_video.h>
 #include <stdlib.h>
 #include <time.h>
 #include "dimensions.h"
 
 #define BARS 100
-#define DELAY 10
+#define DELAY 5
 
 typedef unsigned int u32 ;
 
@@ -80,13 +79,14 @@ void drawBars(SDL_Renderer *renderer, u32 bars[], int barsLength, int swapIndex1
 	SDL_RenderPresent(renderer);
 }
 
-void drawSortedBars(SDL_Renderer *renderer, u32 bars[], int barsLength) {
+void drawSortedBars(SDL_Renderer *renderer, u32 bars[], int barsLength, Uint32 delayMiliseconds) {
 	clearScreen(renderer);
 
 	int dw = WIDTH / barsLength;
 	for (int i = 0; i < barsLength; ++i) {
 		drawBar(renderer, i * dw, HEIGHT - bars[i], dw, bars[i], 0, 255, 0);
 	}
+	SDL_RenderPresent(renderer);
 }
 
 void sortBarsVisualizer(SDL_Renderer *renderer, u32 bars[], int barsLength) {
@@ -114,16 +114,16 @@ void sortBarsVisualizer(SDL_Renderer *renderer, u32 bars[], int barsLength) {
 		}
 	} while (swaps != 0);
 
-	drawSortedBars(renderer, bars, barsLength);
+	drawSortedBars(renderer, bars, barsLength, 50);
 }
 
 int main(void) {
 	srand(time(NULL));
 
 	SDL_Window *window = SDL_CreateWindow("Sorting Algorithm", 0, 0, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
-	SDL_Renderer *renderer = NULL;
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_SHOWN, &window, &renderer);
+	if (window == NULL) return 1;
+	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_TEXTUREACCESS_TARGET);
+	if (renderer == NULL) return 1;
 
 	randomizeBars(bars, BARS);
 
@@ -133,7 +133,6 @@ int main(void) {
 
 	SDL_DestroyWindow(window);
 	SDL_Quit();
-
 
 	return 0;
 }
