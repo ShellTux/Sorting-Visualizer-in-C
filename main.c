@@ -2,20 +2,19 @@
 #include <stdlib.h>
 #include <time.h>
 #include "dimensions.h"
+#include "definitions.h"
 
-typedef unsigned int u32 ;
-
-u32 bars[BARS];
+Barra bars[BARS];
 
 // Drawing
-void sortBarsVisualizer(SDL_Renderer *renderer, u32 bars[], int barsLength);
+void sortBarsVisualizer(SDL_Renderer *renderer, Barra array[], int arrayLength);
 
 // Sorting
-void shuffleArray(u32 array[], int size);
+void shuffleArray(Barra array[], int size);
 
-void printBars(u32 bars[], int size) {
+void printBars(Barra bars[], int size) {
 	for (int i = 0; i < size; ++i) {
-		printf("%d", bars[i]);
+		printf("%d", bars[i].value);
 		if (i != size - 1) printf(", ");
 	}
 	printf("\n");
@@ -25,10 +24,16 @@ int main(void) {
 	srand(time(NULL));
 	
 	// Initialize Array
+	const int dw = WIDTH / BARS;
+	const int dh = HEIGHT / BARS;
 	for (int i = 0; i < BARS; ++i) {
-		u32 height = (i + 1) * HEIGHT / BARS;
-		bars[i] = height;
+		bars[i].value = i;
+		bars[i].sdl_rectangle.w = dw;
+		bars[i].sdl_rectangle.h = i * dh;
+		bars[i].sdl_rectangle.x = bars[i].value * dw;
+		bars[i].sdl_rectangle.y = HEIGHT - bars[i].sdl_rectangle.h;
 	}
+	
 	shuffleArray(bars, BARS);
 
 
