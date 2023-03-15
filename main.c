@@ -1,4 +1,6 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_timer.h>
 #include <stdlib.h>
 #include <time.h>
 #include "dimensions.h"
@@ -13,10 +15,9 @@ void sortBarsVisualizer(SDL_Renderer *renderer, Barra array[], int arrayLength);
 void shuffleArray(Barra array[], int size);
 
 void printBars(Barra bars[], int size) {
-	for (int i = 0; i < size; ++i) {
-		printf("%d", bars[i].value);
-		if (i != size - 1) printf(", ");
-	}
+	for (int i = 0; i < size; ++i)
+		printf("value: %d\n", bars[i].value);
+	
 	printf("\n");
 }
 
@@ -28,13 +29,12 @@ int main(void) {
 	const int dh = HEIGHT / BARS;
 	for (int i = 0; i < BARS; ++i) {
 		bars[i].value = i;
-		bars[i].sdl_rectangle.w = dw;
-		bars[i].sdl_rectangle.h = i * dh;
-		bars[i].sdl_rectangle.x = bars[i].value * dw;
-		bars[i].sdl_rectangle.y = HEIGHT - bars[i].sdl_rectangle.h;
+		bars[i].width = dw;
+		bars[i].height = (i + 1) * dh;
 	}
 	
 	shuffleArray(bars, BARS);
+	printBars(bars, BARS);
 
 
 	SDL_Window *window = SDL_CreateWindow("Sorting Algorithm", 0, 0, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);

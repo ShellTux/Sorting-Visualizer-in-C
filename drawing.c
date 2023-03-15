@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_rect.h>
 #include "dimensions.h"
 #include "definitions.h"
 
@@ -10,21 +11,34 @@ void clearScreen(SDL_Renderer *renderer) {
 	SDL_RenderClear(renderer);
 }
 
-void drawBar(SDL_Renderer *renderer, Barra bar, Uint8 colorRed, Uint8 colorGreen, Uint8 colorBlue) {
+void drawBar(SDL_Renderer *renderer, Barra bar, int x, int y, Uint8 colorRed, Uint8 colorGreen, Uint8 colorBlue) {
 	SDL_SetRenderDrawColor(renderer, colorRed, colorGreen, colorBlue, SDL_ALPHA_OPAQUE);
-	SDL_RenderFillRect(renderer, &bar.sdl_rectangle);
+
+	SDL_Rect rectangle;
+	rectangle.w = bar.width;
+	rectangle.h = bar.height;
+	rectangle.x = x;
+	rectangle.y = y;
+
+	SDL_RenderFillRect(renderer, &rectangle);
 }
 
 void drawBars(SDL_Renderer *renderer, Barra bars[], int barsLength, int swapIndex1, int swapIndex2) {
 	clearScreen(renderer);
 
+	SDL_Rect rectangle;
 	for (int i = 0; i < barsLength; ++i) {
 		if (i == swapIndex1 || i == swapIndex2)
 			SDL_SetRenderDrawColor(renderer, 28, 219, 61, SDL_ALPHA_OPAQUE);
 		else
 			SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
 
-		SDL_RenderFillRect(renderer, &bars[i].sdl_rectangle);
+		rectangle.w = bars[i].width;
+		rectangle.h = bars[i].height;
+		rectangle.x = i * bars[i].width;
+		rectangle.y = HEIGHT - rectangle.h;
+
+		SDL_RenderFillRect(renderer, &rectangle);
 	}
 
 	// Update
@@ -34,7 +48,15 @@ void drawBars(SDL_Renderer *renderer, Barra bars[], int barsLength, int swapInde
 void drawSortedBars(SDL_Renderer *renderer, Barra bars[], int barsLength) {
 	clearScreen(renderer);
 
-	for (int i = 0; i < barsLength; ++i) drawBar(renderer, bars[i], 0, 255, 0);
+	for (int i = 0; i < barsLength; ++i) drawBar(
+			renderer, 
+			bars[i],
+			i * bars[i].width,
+			HEIGHT - bars[i].height,
+			0,
+			255,
+			0
+			);
 	
 	SDL_RenderPresent(renderer);
 }
