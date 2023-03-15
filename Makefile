@@ -11,7 +11,7 @@ all: main.o run
 %:%.o
 	$(CC) $(CFLAGS) -o $@ $^ $(DEPS) 
 
-%.o:%.c $(DEPS)
+%.o:%.c $(DEPS) $(CFILES)
 	@printf "\n"
 	@printf "##################\n"
 	@printf "Building %s\n" $@
