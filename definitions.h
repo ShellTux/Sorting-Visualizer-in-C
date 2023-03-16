@@ -1,6 +1,8 @@
 #include <SDL2/SDL_rect.h>
+#include <SDL2/SDL_render.h>
 
 typedef struct {
-	SDL_Rect sdl_rectangle;
 	int value;
+	SDL_Rect rectangle;
+	SDL_Renderer *renderer;
 } Barra;
