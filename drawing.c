@@ -1,115 +1,93 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_rect.h>
+#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_stdinc.h>
+#include <SDL2/SDL_timer.h>
 #include <string.h>
 #include "dimensions.h"
-#include "definitions.h"
+#include "colors.h"
 
+// Definitions
 #define DELAY 5
-const int dw = WIDTH / BARS;
-const int dh = HEIGHT / BARS;
-void quickSort(Barra arr[], int low, int high);
-void selectionSort(Barra arr[], int size);
-void bubbleSort(Barra arr[], int size);
-void heapSort(Barra arr[], int size);
-void CocktailSort(Barra arr[], int size);
-void oddEvenSort(Barra arr[], int size);
-void combSort(Barra arr[], int size);
 
-void clearScreen(SDL_Renderer *renderer) {
+// Import variables
+/* extern SDL_Window *window; */
+/* extern SDL_Renderer *renderer; */
+
+void clearScreen(SDL_Renderer *canvas) {
 	// Clear screen
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-	SDL_RenderClear(renderer);
+	SDL_SetRenderDrawColor(canvas, BACKGROUND_R, BACKGROUND_G, BACKGROUND_B, SDL_ALPHA_OPAQUE);
+	SDL_RenderClear(canvas);
 }
 
-void drawBar(SDL_Renderer *renderer, Barra bar, int position, Uint8 colorRed, Uint8 colorGreen, Uint8 colorBlue) {
-	SDL_SetRenderDrawColor(renderer, colorRed, colorGreen, colorBlue, SDL_ALPHA_OPAQUE);
+void drawBars(SDL_Renderer *canvas, int array[], int arrayLength, Uint8 defaultColorR, Uint8 defaultColorG, Uint8 defaultColorB, int highlightedPositions[], int numberOfHighlighted, Uint8 highlightColorR, Uint8 highlightColorG, Uint8 highlightColorB) {
+	clearScreen(canvas);
 
-	bar.rectangle.x = position * dw;
-	bar.rectangle.y = HEIGHT - position * dh;
+	const int deltaWidth = WIDTH / arrayLength;
+	const int deltaHeight = HEIGHT / arrayLength;
+	SDL_Rect rectangle;
+	rectangle.w = deltaWidth;
 
-	SDL_RenderFillRect(renderer, &bar.rectangle);
-}
+	for (int i = 0; i < arrayLength; ++i) {
+		int highlited = 0;
 
-void drawBars(SDL_Renderer *renderer, Barra bars[], int barsLength, int swapIndex1, int swapIndex2) {
-	clearScreen(renderer);
-
-	for (int i = 0; i < barsLength; ++i) {
-		if (i == swapIndex1 || i == swapIndex2)
-			SDL_SetRenderDrawColor(renderer, 28, 219, 61, SDL_ALPHA_OPAQUE);
+		if (numberOfHighlighted > 0)
+			for (int j = 0; j < numberOfHighlighted; ++j) 
+				if (i == highlightedPositions[j]) {
+					highlited = 1;
+					break;
+				}
+			
+		if (highlited)
+			SDL_SetRenderDrawColor(canvas, highlightColorR, highlightColorG, highlightColorB, SDL_ALPHA_OPAQUE);
 		else
-			SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
+			SDL_SetRenderDrawColor(canvas, defaultColorR, defaultColorG, defaultColorB, SDL_ALPHA_OPAQUE);
 
-		bars[i].rectangle.x = i * bars[i].rectangle.w;
-		bars[i].rectangle.y = HEIGHT - bars[i].rectangle.h;
+		rectangle.h = array[i] * deltaHeight;
+		rectangle.x = i * deltaWidth;
+		rectangle.y = HEIGHT - rectangle.h;
 
-		SDL_RenderFillRect(renderer, &bars[i].rectangle);
+		SDL_RenderFillRect(canvas, &rectangle);
 	}
 
 	// Update
-	SDL_RenderPresent(renderer);
+	SDL_RenderPresent(canvas);
 }
 
-void drawSortedBars(SDL_Renderer *renderer, Barra bars[], int barsLength) {
-	clearScreen(renderer);
+void sortVisualizer(SDL_Renderer *canvas, int array[], int arrayLength, char *Visualizer, char *Algorithm) {
+	clearScreen(canvas);
 
-	for (int i = 0; i < barsLength; ++i) drawBar(
-			renderer, 
-			bars[i],
-			i,
-			0,
-			255,
-			0
-			);
-	
-	SDL_RenderPresent(renderer);
-}
+	int h[1];
+	drawBars(canvas, array, arrayLength,
+			BAR_R, BAR_G, BAR_B,
+			h, 0,
+			HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
 
-void sortBarsVisualizer(SDL_Renderer *renderer, Barra bars[], int barsLength, char *Algorithm) {
-	// Clear screen
-	clearScreen(renderer);
 
-	SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
-	drawBars(renderer, bars, barsLength, -1, -1);
-
-	int swaps;
-	if (!strcmp(Algorithm, "None")) {
+	// Sort
+	if (!strcmp(Algorithm, "None") && !strcmp(Visualizer, "Bars")) {
+		int swaps;
 		do {
 			swaps = 0;
-			for (int i = 0; i < barsLength - 1; ++i) {
-				if (bars[i + 1].value >= bars[i].value) continue;
+			for (int i = 0; i < arrayLength - 1; ++i) {
+				if (array[i + 1] >= array[i]) continue;
 				SDL_Delay(DELAY);
 
 				// Swap
 				++swaps;
-				Barra temp = bars[i];
-				bars[i] = bars[i + 1];
-				bars[i + 1] = temp;
-				drawBars(renderer, bars, barsLength, i, i + 1);
+				int temp = array[i];
+				array[i] = array[i + 1];
+				array[i + 1] = temp;
+				int highlighting[] = { i , i + 1 };
+				drawBars(canvas, array, arrayLength,
+						BAR_R, BAR_G, BAR_B,
+						highlighting, 2,
+						HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
 			}
 		} while (swaps != 0);
 	}
-
-	if (!strcmp(Algorithm, "Quick Sort")) 
-		quickSort(bars, 0, BARS - 1);
-
-	if (!strcmp(Algorithm, "Selection Sort")) 
-		selectionSort(bars, BARS);
-
-	if (!strcmp(Algorithm, "Bubble Sort")) 
-		bubbleSort(bars, BARS);
-
-	if (!strcmp(Algorithm, "Heap Sort")) 
-		heapSort(bars, BARS);
-
-	if (!strcmp(Algorithm, "Cocktail Sort")) 
-		CocktailSort(bars, BARS);
-
-	if (!strcmp(Algorithm, "Odd Even Sort")) 
-		oddEvenSort(bars, BARS);
-
-	if (!strcmp(Algorithm, "Comb Sort")) 
-		combSort(bars, BARS);
 	
-
-	drawSortedBars(renderer, bars, barsLength);
+	// Draw sorted bars
+	drawBars(canvas, array, arrayLength,
+			BAR_R, BAR_G, BAR_B,
+			h, 0,
+			HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
 }

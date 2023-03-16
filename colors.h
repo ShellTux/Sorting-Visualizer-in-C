@@ -1,0 +1,12 @@
+#define BACKGROUND_R 0
+#define BACKGROUND_G 0
+#define BACKGROUND_B 0
+#define BAR_R 255
+#define BAR_G 255
+#define BAR_B 255
+#define HIGHLIGHT_R 27
+#define HIGHLIGHT_G 219
+#define HIGHLIGHT_B 27
+#define SHUFFLE_R 255
+#define SHUFFLE_G 0
+#define SHUFFLE_B 0

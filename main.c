@@ -1,25 +1,25 @@
+#include <SDL2/SDL_timer.h>
+#include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_render.h>
-#include <SDL2/SDL_timer.h>
-#include <stdlib.h>
-#include <time.h>
-#include "dimensions.h"
 #include "definitions.h"
+#include "dimensions.h"
+#include "sorting.h"
+#include "drawing.h"
 
-Barra bars[BARS];
+// Definitions
+SDL_Window *window;
+SDL_Renderer *renderer;
+extern int array[NUMBER_OF_ELEMENTS];
+void drawBars(SDL_Renderer *canvas, int array[], int arrayLength, Uint8 defaultColorR, Uint8 defaultColorG, Uint8 defaultColorB, int highlightedPositions[], int numberOfHighlighted, Uint8 highlightColorR, Uint8 highlightColorG, Uint8 highlightColorB);
 
-// Drawing
-void sortBarsVisualizer(SDL_Renderer *renderer, Barra array[], int arrayLength, char *Algorithm);
-
-// Sorting
-void shuffleArray(Barra array[], int size);
-
-void printBars(Barra bars[], int size) {
+void printArray(int array[], int arrayLength) {
 	printf("[ ");
-	for (int i = 0; i < size; ++i) {
-		printf("%d", bars[i].value);
-		if (i != size - 1)
-			printf(", ");
+	for (int i = 0; i < arrayLength; ++i) {
+		printf("%d", array[i]);
+		if (i != arrayLength - 1) printf(", ");
 	}
 	printf("]\n");
 }
@@ -33,17 +33,21 @@ int main(void) {
 	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_TEXTUREACCESS_TARGET);
 	if (renderer == NULL) return 1;
 	
-	// Initialize Array
-	const int dw = WIDTH / BARS;
-	const int dh = HEIGHT / BARS;
-	for (int i = 0; i < BARS; ++i) {
-		bars[i].value = i;
-		bars[i].rectangle.w = dw;
-		bars[i].rectangle.h = (i + 1) * dh;
-		bars[i].renderer = renderer;
-	}
+	// Initialize Array it should be normalized if
+	// in the future we intend to use other sorting visualizers
+	initializeArray(array, NUMBER_OF_ELEMENTS, 0, NUMBER_OF_ELEMENTS);
+	printArray(array, NUMBER_OF_ELEMENTS);
+
+	// Shuffle Array
+	shuffleArray(array, NUMBER_OF_ELEMENTS);
+	printArray(array, NUMBER_OF_ELEMENTS);
 	
+	char visualizerTypes[][5] = {
+		"Bars"
+	};
+
 	char algorithms[][15] = { 
+		"None",
 		"Quick Sort", 
 		"Selection Sort",
 		"Bubble Sort",
@@ -53,16 +57,18 @@ int main(void) {
 		"Comb Sort"
 	};
 
-	for (long unsigned int i = 0; i < sizeof(algorithms) / sizeof(algorithms[0]); ++i) {
-		shuffleArray(bars, BARS);
-		/* printBars(bars, BARS); */
+	for (long unsigned int visualizerTypeIndex = 0; visualizerTypeIndex < sizeof(visualizerTypes) / sizeof(visualizerTypes[0]) ; ++visualizerTypeIndex) 
+		for (long unsigned int algorithmIndex = 0; algorithmIndex < sizeof(algorithms) / sizeof(algorithms[0]); ++algorithmIndex) {
+			shuffleArray(array, NUMBER_OF_ELEMENTS);
+			/* printBars(bars, BARS); */
 
-		printf("Algorithm: %s\n", algorithms[i]);
-		sortBarsVisualizer(renderer, bars, BARS, algorithms[i]);
-		/* printBars(bars, BARS); */
-	}
+			printf("Algorithm: %s\n", algorithms[algorithmIndex]);
+			sortVisualizer(renderer, array, NUMBER_OF_ELEMENTS, visualizerTypes[visualizerTypeIndex], algorithms[algorithmIndex]);
+			/* printBars(bars, BARS); */
+		}
 
-	SDL_Delay(1000);
+
+	/* SDL_Delay(1000); */
 
 	SDL_DestroyWindow(window);
 	SDL_Quit();
