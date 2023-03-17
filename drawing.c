@@ -1,6 +1,7 @@
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_stdinc.h>
 #include <SDL2/SDL_timer.h>
+#include <SDL2/SDL_video.h>
 #include <string.h>
 #include "dimensions.h"
 #include "colors.h"
@@ -53,7 +54,9 @@ void drawBars(SDL_Renderer *canvas, int array[], int arrayLength, Uint8 defaultC
 	SDL_RenderPresent(canvas);
 }
 
-void sortVisualizer(SDL_Renderer *canvas, int array[], int arrayLength, char *Visualizer, char *Algorithm) {
+void sortVisualizer(SDL_Window *window, SDL_Renderer *canvas, int array[], int arrayLength, char *Visualizer, char *Algorithm) {
+	SDL_SetWindowTitle(window, Algorithm);
+
 	clearScreen(canvas);
 
 	int h[1];
