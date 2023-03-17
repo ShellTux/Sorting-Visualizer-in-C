@@ -36,11 +36,6 @@ int main(void) {
 	// Initialize Array it should be normalized if
 	// in the future we intend to use other sorting visualizers
 	initializeArray(array, NUMBER_OF_ELEMENTS, 0, NUMBER_OF_ELEMENTS);
-	printArray(array, NUMBER_OF_ELEMENTS);
-
-	// Shuffle Array
-	shuffleArray(array, NUMBER_OF_ELEMENTS);
-	printArray(array, NUMBER_OF_ELEMENTS);
 	
 	char visualizerTypes[][5] = {
 		"Bars"
@@ -59,12 +54,21 @@ int main(void) {
 
 	for (long unsigned int visualizerTypeIndex = 0; visualizerTypeIndex < sizeof(visualizerTypes) / sizeof(visualizerTypes[0]) ; ++visualizerTypeIndex) 
 		for (long unsigned int algorithmIndex = 0; algorithmIndex < sizeof(algorithms) / sizeof(algorithms[0]); ++algorithmIndex) {
+			printf("Algorithm: %s\n", algorithms[algorithmIndex]);
+
+			
+			// Shuffle
 			shuffleArray(array, NUMBER_OF_ELEMENTS);
+			printf("Shuffled Array: ");
 			printArray(array, NUMBER_OF_ELEMENTS);
 
-			printf("Algorithm: %s\n", algorithms[algorithmIndex]);
+
+			// Sort
 			sortVisualizer(renderer, array, NUMBER_OF_ELEMENTS, visualizerTypes[visualizerTypeIndex], algorithms[algorithmIndex]);
+			printf("Sorted Array: ");
 			printArray(array, NUMBER_OF_ELEMENTS);
+
+			printf("\n");
 		}
 
 
