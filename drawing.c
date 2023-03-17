@@ -88,6 +88,42 @@ void sortVisualizer(SDL_Renderer *canvas, int array[], int arrayLength, char *Vi
 
 	if (!strcmp(Algorithm, "Quick Sort") && !strcmp(Visualizer, "Bars")) 
 		quickSort(array, 0, arrayLength - 1, arrayLength);
+
+	if (!strcmp(Algorithm, "Selection Sort") && !strcmp(Visualizer, "Bars")) 
+		selectionSort(array, arrayLength);
+
+	if (!strcmp(Algorithm, "Bubble Sort") && !strcmp(Visualizer, "Bars")) 
+		bubbleSort(array, arrayLength);
+
+	if (!strcmp(Algorithm, "Insertion Sort") && !strcmp(Visualizer, "Bars")) 
+		insertionSort(array, arrayLength);
+
+	if (!strcmp(Algorithm, "Heap Sort") && !strcmp(Visualizer, "Bars")) 
+		heapSort(array, arrayLength);
+
+	if (!strcmp(Algorithm, "Radix Sort") && !strcmp(Visualizer, "Bars")) 
+		radixSort(array, arrayLength);
+
+	if (!strcmp(Algorithm, "Shell Sort") && !strcmp(Visualizer, "Bars")) 
+		shellSort(array, arrayLength);
+
+	if (!strcmp(Algorithm, "Comb Sort") && !strcmp(Visualizer, "Bars")) 
+		combSort(array, arrayLength);
+
+	if (!strcmp(Algorithm, "Cocktail Sort") && !strcmp(Visualizer, "Bars")) 
+		CocktailSort(array, arrayLength);
+
+	if (!strcmp(Algorithm, "Cycle Sort") && !strcmp(Visualizer, "Bars")) 
+		cycleSort(array, arrayLength);
+
+	if (!strcmp(Algorithm, "Odd-Even Sort") && !strcmp(Visualizer, "Bars")) 
+		oddEvenSort(array, arrayLength);
+
+	if (!strcmp(Algorithm, "Gnome Sort") && !strcmp(Visualizer, "Bars")) 
+		gnomeSort(array, arrayLength);
+
+	if (!strcmp(Algorithm, "Shell Sort") && !strcmp(Visualizer, "Bars")) 
+		shellSort(array, arrayLength);
 	
 	
 	// Draw sorted bars

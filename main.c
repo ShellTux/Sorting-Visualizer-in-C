@@ -42,15 +42,18 @@ int main(void) {
 		"Bars"
 	};
 
-	char algorithms[][15] = { 
-		"None",
+	char algorithms[][20] = { 
 		"Quick Sort", 
 		"Selection Sort",
 		"Bubble Sort",
 		"Heap Sort",
+		"Radix Sort",
+		"Shell Sort",
+		"Comb Sort",
 		"Cocktail Sort",
-		"Odd Even Sort",
-		"Comb Sort"
+		"Cycle Sort",
+		"Odd-Even Sort",
+		"Gnome Sort"
 	};
 
 	for (long unsigned int visualizerTypeIndex = 0; visualizerTypeIndex < sizeof(visualizerTypes) / sizeof(visualizerTypes[0]) ; ++visualizerTypeIndex) 

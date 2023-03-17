@@ -7,6 +7,6 @@
 #define HIGHLIGHT_R 27
 #define HIGHLIGHT_G 219
 #define HIGHLIGHT_B 27
-#define SHUFFLE_R 255
-#define SHUFFLE_G 0
-#define SHUFFLE_B 0
+#define SHUFFLE_R 238
+#define SHUFFLE_G 73
+#define SHUFFLE_B 20
