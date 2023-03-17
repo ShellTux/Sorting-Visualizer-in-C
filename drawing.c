@@ -4,6 +4,7 @@
 #include <string.h>
 #include "dimensions.h"
 #include "colors.h"
+#include "sorting.h"
 
 // Definitions
 #define DELAY 5
@@ -85,9 +86,9 @@ void sortVisualizer(SDL_Renderer *canvas, int array[], int arrayLength, char *Vi
 		} while (swaps != 0);
 	}
 
-	if (!strcmp(Algorithm, "Quick Sort") && !strcmp(Visualizer, "Bars")) {
-		
-	}
+	if (!strcmp(Algorithm, "Quick Sort") && !strcmp(Visualizer, "Bars")) 
+		quickSort(array, 0, arrayLength - 1, arrayLength);
+	
 	
 	// Draw sorted bars
 	drawBars(canvas, array, arrayLength,
