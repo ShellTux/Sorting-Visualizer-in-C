@@ -60,11 +60,11 @@ int main(void) {
 	for (long unsigned int visualizerTypeIndex = 0; visualizerTypeIndex < sizeof(visualizerTypes) / sizeof(visualizerTypes[0]) ; ++visualizerTypeIndex) 
 		for (long unsigned int algorithmIndex = 0; algorithmIndex < sizeof(algorithms) / sizeof(algorithms[0]); ++algorithmIndex) {
 			shuffleArray(array, NUMBER_OF_ELEMENTS);
-			/* printBars(bars, BARS); */
+			printArray(array, NUMBER_OF_ELEMENTS);
 
 			printf("Algorithm: %s\n", algorithms[algorithmIndex]);
 			sortVisualizer(renderer, array, NUMBER_OF_ELEMENTS, visualizerTypes[visualizerTypeIndex], algorithms[algorithmIndex]);
-			/* printBars(bars, BARS); */
+			printArray(array, NUMBER_OF_ELEMENTS);
 		}
 
 

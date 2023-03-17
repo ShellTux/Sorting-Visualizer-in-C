@@ -84,6 +84,10 @@ void sortVisualizer(SDL_Renderer *canvas, int array[], int arrayLength, char *Vi
 			}
 		} while (swaps != 0);
 	}
+
+	if (!strcmp(Algorithm, "Quick Sort") && !strcmp(Visualizer, "Bars")) {
+		
+	}
 	
 	// Draw sorted bars
 	drawBars(canvas, array, arrayLength,
