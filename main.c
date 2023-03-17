@@ -1,4 +1,5 @@
 #include <SDL2/SDL_timer.h>
+#include <SDL2/SDL_video.h>
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
@@ -10,8 +11,8 @@
 #include "drawing.h"
 
 // Definitions
-SDL_Window *window;
-SDL_Renderer *renderer;
+SDL_Window *window = NULL;
+SDL_Renderer *renderer = NULL;
 extern int array[NUMBER_OF_ELEMENTS];
 void drawBars(SDL_Renderer *canvas, int array[], int arrayLength, Uint8 defaultColorR, Uint8 defaultColorG, Uint8 defaultColorB, int highlightedPositions[], int numberOfHighlighted, Uint8 highlightColorR, Uint8 highlightColorG, Uint8 highlightColorB);
 
@@ -28,9 +29,9 @@ int main(void) {
 	srand(time(NULL));
 
 
-	SDL_Window *window = SDL_CreateWindow("Sorting Algorithm", 0, 0, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
+	window = SDL_CreateWindow("Sorting Algorithm", 0, 0, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
 	if (window == NULL) return 1;
-	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_TEXTUREACCESS_TARGET);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_TEXTUREACCESS_TARGET);
 	if (renderer == NULL) return 1;
 	
 	// Initialize Array it should be normalized if
