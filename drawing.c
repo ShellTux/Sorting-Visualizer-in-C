@@ -76,8 +76,6 @@ void drawSortedBars(SDL_Renderer *canvas, int array[], int arrayLength, Uint8 hi
 };
 
 void sortVisualizer(SDL_Window *window, SDL_Renderer *canvas, int array[], int arrayLength, char *Visualizer, char *Algorithm) {
-	SDL_SetWindowTitle(window, Algorithm);
-
 	clearScreen(canvas);
 
 	drawBars(canvas, array, array, arrayLength,
