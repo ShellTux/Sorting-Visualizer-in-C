@@ -14,7 +14,6 @@ void drawBars(SDL_Renderer *canvas, int array[], int previousArray[], int arrayL
 void drawCircle(SDL_Renderer *canvas, int array[], int arrayLength);
 
 void draw(int array[], int arrayLength) {
-	printf("%s\n", visualizer);
 	if (!strcmp(visualizer, "Bars"))
 		drawBars(renderer, array, originalArray, arrayLength, BAR_R, BAR_G, BAR_B, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
 	
