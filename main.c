@@ -1,6 +1,7 @@
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_video.h>
 #include <stdio.h>
+#include <string.h>
 #include <time.h>
 #include <stdlib.h>
 #include <SDL2/SDL.h>
@@ -14,6 +15,7 @@
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
 extern int array[NUMBER_OF_ELEMENTS];
+extern char *visualizer;
 void drawBars(SDL_Renderer *canvas, int array[], int arrayLength, Uint8 defaultColorR, Uint8 defaultColorG, Uint8 defaultColorB, int highlightedPositions[], int numberOfHighlighted, Uint8 highlightColorR, Uint8 highlightColorG, Uint8 highlightColorB);
 
 void printArray(int array[], int arrayLength) {
@@ -38,8 +40,9 @@ int main(void) {
 	// in the future we intend to use other sorting visualizers
 	initializeArray(array, NUMBER_OF_ELEMENTS, 0, NUMBER_OF_ELEMENTS);
 	
-	char visualizerTypes[][5] = {
-		"Bars"
+	char visualizerTypes[][15] = {
+		"Bars",
+		"Colored Circle"
 	};
 
 	char algorithms[][20] = { 
@@ -58,9 +61,14 @@ int main(void) {
 
 	for (long unsigned int visualizerTypeIndex = 0; visualizerTypeIndex < sizeof(visualizerTypes) / sizeof(visualizerTypes[0]) ; ++visualizerTypeIndex) 
 		for (long unsigned int algorithmIndex = 0; algorithmIndex < sizeof(algorithms) / sizeof(algorithms[0]); ++algorithmIndex) {
-			SDL_SetWindowTitle(window, algorithms[algorithmIndex]);
+			char title[100] = "";
+			strcat(title, algorithms[algorithmIndex]);
+			strcat(title, " | ");
+			strcat(title, visualizerTypes[visualizerTypeIndex]);
+			SDL_SetWindowTitle(window, title);
 
 			printf("Algorithm: %s\n", algorithms[algorithmIndex]);
+			visualizer = visualizerTypes[visualizerTypeIndex];
 
 			
 			// Shuffle

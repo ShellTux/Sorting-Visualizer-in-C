@@ -1,6 +1,7 @@
 #include <SDL2/SDL_timer.h>
 #include <stdlib.h>
 #include <SDL2/SDL_render.h>
+#include <string.h>
 #include "definitions.h"
 #include "colors.h"
 
@@ -8,13 +9,18 @@
 int array[NUMBER_OF_ELEMENTS];
 int originalArray[NUMBER_OF_ELEMENTS];
 extern SDL_Renderer *renderer;
+char *visualizer = "None";
 void drawBars(SDL_Renderer *canvas, int array[], int previousArray[], int arrayLength, Uint8 barColorR, Uint8 barColorG, Uint8 BarColorB, Uint8 highlightColorR, Uint8 highlightColorG, Uint8 highlightColorB);
+void drawCircle(SDL_Renderer *canvas, int array[], int arrayLength);
 
-/* void swap(int array[], int index1, int index2) { */
-/* 	int t = array[index1]; */
-/* 	array[index1] = array[index2]; */
-/* 	array[index2] = t; */
-/* } */
+void draw(int array[], int arrayLength) {
+	printf("%s\n", visualizer);
+	if (!strcmp(visualizer, "Bars"))
+		drawBars(renderer, array, originalArray, arrayLength, BAR_R, BAR_G, BAR_B, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
+	
+	if (!strcmp(visualizer, "Colored Circle"))
+		drawCircle(renderer, array, arrayLength);
+}
 
 void swap(int *value1, int *value2) {
 	int t = *value1;
@@ -23,7 +29,6 @@ void swap(int *value1, int *value2) {
 }
 
 void shuffleArray(int array[], int arrayLength) {
-	int originalArray[arrayLength];
 	if (arrayLength > 1) {
 		for (int i = 0; i < arrayLength - 1; i++) {
 			int j = i + rand() / (RAND_MAX / (arrayLength - i) + 1);
@@ -31,7 +36,7 @@ void shuffleArray(int array[], int arrayLength) {
 			originalArray[j] = array[j];
 			swap(&array[i], &array[j]);
 
-			drawBars(renderer, array, originalArray, arrayLength, BAR_R, BAR_G, BAR_B, SHUFFLE_R, SHUFFLE_G, SHUFFLE_B);
+			draw(array, arrayLength);
 			SDL_Delay(SHUFFLE_DELAY);
 		}
 	}
@@ -61,13 +66,15 @@ int partition(int arr[], int low, int high, int length) {
 		if (arr[j] < pivot) {
 			i++; // increment index of smaller element
 			swap(&arr[i], &arr[j]);
-			drawBars(renderer, arr, originalArray, length, BAR_R, BAR_G, BAR_B, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
+			/* drawBars(renderer, arr, originalArray, length, BAR_R, BAR_G, BAR_B, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B); */
+			draw(arr, length);
 			SDL_Delay(SHUFFLE_DELAY);
 		}
 	}
 
 	swap(&arr[i + 1], &arr[high]);
-	drawBars(renderer, arr, originalArray, length, BAR_R, BAR_G, BAR_B, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
+	/* drawBars(renderer, arr, originalArray, length, BAR_R, BAR_G, BAR_B, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B); */
+	draw(arr, length);
 	SDL_Delay(SHUFFLE_DELAY);
 	return (i + 1);
 }
@@ -112,7 +119,7 @@ void selectionSort(int arr[], int n) {
 		// Swap the found minimum element with the first element
 		if (min_idx != i) {
 			swap(&arr[min_idx], &arr[i]);
-			drawBars(renderer, arr, originalArray, n, BAR_R, BAR_G, BAR_B, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
+			draw(arr, n);
 			SDL_Delay(SHUFFLE_DELAY);
 		}
 	}
@@ -137,7 +144,7 @@ void bubbleSort(int arr[], int n) {
 		for (j = 0; j < n - i - 1; j++)
 			if (arr[j] > arr[j + 1]) {
 				swap(&arr[j], &arr[j + 1]);
-				drawBars(renderer, arr, originalArray, n, BAR_R, BAR_G, BAR_B, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
+				draw(arr, n);
 				SDL_Delay(SHUFFLE_DELAY);
 			}
 }
@@ -166,7 +173,7 @@ void insertionSort(int arr[], int n) {
 		while (j >= 0 && arr[j] > key) {
 			arr[j + 1] = arr[j];
 
-			drawBars(renderer, arr, originalArray, n, BAR_R, BAR_G, BAR_B, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
+			draw(arr, n);
 			SDL_Delay(SHUFFLE_DELAY);
 
 			j = j - 1;
@@ -294,7 +301,7 @@ void heapify(int arr[], int length, int N, int i) {
 	if (largest != i) {
 
 		swap(&arr[i], &arr[largest]);
-		drawBars(renderer, arr, originalArray, length, BAR_R, BAR_G, BAR_B, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
+		draw(arr, length);
 		SDL_Delay(SHUFFLE_DELAY);
 
 		// Recursively heapify the affected
@@ -316,7 +323,7 @@ void heapSort(int arr[], int N) {
 	for (int i = N - 1; i >= 0; i--) {
 
 		swap(&arr[0], &arr[i]);
-		drawBars(renderer, arr, originalArray, N, BAR_R, BAR_G, BAR_B, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
+		draw(arr, N);
 		SDL_Delay(SHUFFLE_DELAY);
 
 		// Heapify root element to get highest element at
@@ -334,52 +341,51 @@ void heapSort(int arr[], int N) {
 /* Counting Sorting START */
 /* ################## */
 
-/*#define RANGE 255 */
+#define RANGE 255
 
-/*// The main function that sort the given string arr[] in */
-/*// alphabetical order */
-/* void countSort(char arr[]) { */
-/*	// The output character array that will have sorted arr */
-/*	char output[strlen(arr)]; */
+// The main function that sort the given string arr[] in
+// alphabetical order
+ /* void countSort(char arr[]) { */
+	/* // The output character array that will have sorted arr */
+	/* char output[strlen(arr)]; */
 
-/*	// Create a count array to store count of individual */
-/*	// characters and initialize count array as 0 */
-/*	int count[RANGE + 1], i; */
-/*	memset(count, 0, sizeof(count)); */
+	/* // Create a count array to store count of individual */
+	/* // characters and initialize count array as 0 */
+	/* int count[RANGE + 1], i; */
+	/* memset(count, 0, sizeof(count)); */
 
-/*	// Store count of each character */
-/*	for (i = 0; arr[i]; ++i) */
-/*		++count[arr[i]]; */
+	/* // Store count of each character */
+	/* for (i = 0; arr[i]; ++i) */
+		/* ++count[arr[i]]; */
 
-/*	// Change count[i] so that count[i] now contains actual */
-/*	// position of this character in output array */
-/*	for (i = 1; i <= RANGE; ++i) */
-/*		count[i] += count[i - 1]; */
+	/* // Change count[i] so that count[i] now contains actual */
+	/* // position of this character in output array */
+	/* for (i = 1; i <= RANGE; ++i) */
+		/* count[i] += count[i - 1]; */
 
-/*	// Build the output character array */
-/*	for (i = 0; arr[i]; ++i) { */
-/*		output[count[arr[i]] - 1] = arr[i]; */
-/*		--count[arr[i]]; */
-/*	} */
+	/* // Build the output character array */
+	/* for (i = 0; arr[i]; ++i) { */
+		/* output[count[arr[i]] - 1] = arr[i]; */
+		/* --count[arr[i]]; */
+	/* } */
 
-/*	/1* */
-/*	For Stable algorithm */
-/*	for (i = sizeof(arr)-1; i>=0; --i) */
-/*	{ */
-/*		output[count[arr[i]]-1] = arr[i]; */
-/*		--count[arr[i]]; */
-/*	} */
+	/* /1* For Stable algorithm *1/ */
+	/* for (i = sizeof(arr)-1; i>=0; --i) */
+	/* { */
+		/* output[count[arr[i]]-1] = arr[i]; */
+		/* --count[arr[i]]; */
+	/* } */
 
-/*	For Logic : See implementation */
+	/* /1* For Logic : See implementation *1/ */
 
-/*	int highlighting[1]; */
-/*	// Copy the output array to arr, so that arr now */
-/*	// contains sorted characters */
-/*	for (i = 0; arr[i]; ++i) { */
-/*		arr[i] = output[i]; */
-/*		highlighting[0] = i; */
-/*		drawBars(renderer, arr, int arrayLength, BAR_R, BAR_G, BAR_B, highlighting, 1, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B); */
-/*	} */
+	/* int highlighting[1]; */
+	/* // Copy the output array to arr, so that arr now */
+	/* // contains sorted characters */
+	/* for (i = 0; arr[i]; ++i) { */
+		/* arr[i] = output[i]; */
+		/* highlighting[0] = i; */
+		/* draw(arr, n); */
+	/* } */
 /* } */
 
 /* ################## */
@@ -425,7 +431,7 @@ void countSort(int arr[], int n, int exp) {
 	// contains sorted numbers according to current digit
 	for (i = 0; i < n; i++) {
 		arr[i] = output[i];
-		drawBars(renderer, arr, originalArray, n, BAR_R, BAR_G, BAR_B, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
+		draw(arr, n);
 		SDL_Delay(SHUFFLE_DELAY);
 	}
 }
@@ -488,7 +494,7 @@ void shellSort(int arr[], int n) {
 			// put temp (the original a[i]) in its correct location
 			arr[j] = temp;
 
-			drawBars(renderer, arr, originalArray, n, BAR_R, BAR_G, BAR_B, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
+			draw(arr, n);
 		}
 	}
 }
@@ -539,7 +545,7 @@ void combSort(int arr[], int n) {
 				swap(&arr[i], &arr[i+gap]);
 				swapped = 1;
 
-				drawBars(renderer, arr, originalArray, n, BAR_R, BAR_G, BAR_B, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
+				draw(arr, n);
 				SDL_Delay(SHUFFLE_DELAY);
 			}
 		}
@@ -576,7 +582,7 @@ void CocktailSort(int arr[], int n) {
 				swap(&arr[i], &arr[i + 1]);
 				swapped = 1;
 
-				drawBars(renderer, arr, originalArray, n, BAR_R, BAR_G, BAR_B, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
+				draw(arr, n);
 				SDL_Delay(SHUFFLE_DELAY);
 			}
 		}
@@ -599,7 +605,7 @@ void CocktailSort(int arr[], int n) {
 				swap(&arr[i], &arr[i + 1]);
 				swapped = 1;
 
-				drawBars(renderer, arr, originalArray, n, BAR_R, BAR_G, BAR_B, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
+				draw(arr, n);
 				SDL_Delay(SHUFFLE_DELAY);
 			}
 		}
@@ -653,7 +659,7 @@ void cycleSort(int arr[], int n) {
 			swap(&item, &arr[pos]);
 			writes++;
 
-			drawBars(renderer, arr, originalArray, n, BAR_R, BAR_G, BAR_B, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
+			draw(arr, n);
 			SDL_Delay(SHUFFLE_DELAY);
 		}
 
@@ -675,7 +681,7 @@ void cycleSort(int arr[], int n) {
 				swap(&item, &arr[pos]);
 				writes++;
 
-				drawBars(renderer, arr, originalArray, n, BAR_R, BAR_G, BAR_B, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
+				draw(arr, n);
 				SDL_Delay(SHUFFLE_DELAY);
 			}
 		}
@@ -709,7 +715,7 @@ void oddEvenSort(int arr[], int n) {
 				swap(&arr[i], &arr[i+1]);
 				isSorted = 0;
 
-				drawBars(renderer, arr, originalArray, n, BAR_R, BAR_G, BAR_B, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
+				draw(arr, n);
 				SDL_Delay(SHUFFLE_DELAY);
 			}
 		}
@@ -720,7 +726,7 @@ void oddEvenSort(int arr[], int n) {
 				swap(&arr[i], &arr[i+1]);
 				isSorted = 0;
 
-				drawBars(renderer, arr, originalArray, n, BAR_R, BAR_G, BAR_B, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
+				draw(arr, n);
 				SDL_Delay(SHUFFLE_DELAY);
 			}
 		}
@@ -753,7 +759,7 @@ void gnomeSort(int arr[], int n) {
 			swap(&arr[index], &arr[index - 1]);
 			index--;
 
-			drawBars(renderer, arr, originalArray, n, BAR_R, BAR_G, BAR_B, HIGHLIGHT_R, HIGHLIGHT_G, HIGHLIGHT_B);
+			draw(arr, n);
 			SDL_Delay(SHUFFLE_DELAY);
 		}
 	}
