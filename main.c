@@ -65,19 +65,20 @@ int main(void) {
 			strcat(title, algorithms[algorithmIndex]);
 			strcat(title, " | ");
 			strcat(title, visualizerTypes[visualizerTypeIndex]);
-			SDL_SetWindowTitle(window, title);
 
 			printf("Algorithm: %s\n", algorithms[algorithmIndex]);
 			visualizer = visualizerTypes[visualizerTypeIndex];
 
 			
 			// Shuffle
+			SDL_SetWindowTitle(window, "Shuffling Array...");
 			shuffleArray(array, NUMBER_OF_ELEMENTS);
 			printf("Shuffled Array: ");
 			printArray(array, NUMBER_OF_ELEMENTS);
 
 
 			// Sort
+			SDL_SetWindowTitle(window, title);
 			sortVisualizer(renderer, array, NUMBER_OF_ELEMENTS, visualizerTypes[visualizerTypeIndex], algorithms[algorithmIndex]);
 			printf("Sorted Array: ");
 			printArray(array, NUMBER_OF_ELEMENTS);
