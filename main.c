@@ -70,7 +70,7 @@ int main(void) {
 
 
 			// Sort
-			sortVisualizer(window, renderer, array, NUMBER_OF_ELEMENTS, visualizerTypes[visualizerTypeIndex], algorithms[algorithmIndex]);
+			sortVisualizer(renderer, array, NUMBER_OF_ELEMENTS, visualizerTypes[visualizerTypeIndex], algorithms[algorithmIndex]);
 			printf("Sorted Array: ");
 			printArray(array, NUMBER_OF_ELEMENTS);
 
