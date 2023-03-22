@@ -84,6 +84,45 @@ int maximum(int array[], int length) {
 	return maximum;
 }
 
+void hsl2rgb(double hue, double saturation, double lightness, int *red, int *green, int *blue) {
+    double chroma = (1 - fabs(2 * lightness - 1)) * saturation;
+    double hue_region = hue * 6;
+    double second_largest_component = chroma * (1 - fabs(fmod(hue_region, 2) - 1));
+    double r, g, b;
+    
+    if (hue_region < 1) {
+        r = chroma;
+        g = second_largest_component;
+        b = 0;
+    } else if (hue_region < 2) {
+        r = second_largest_component;
+        g = chroma;
+        b = 0;
+    } else if (hue_region < 3) {
+        r = 0;
+        g = chroma;
+        b = second_largest_component;
+    } else if (hue_region < 4) {
+        r = 0;
+        g = second_largest_component;
+        b = chroma;
+    } else if (hue_region < 5) {
+        r = second_largest_component;
+        g = 0;
+        b = chroma;
+    } else {
+        r = chroma;
+        g = 0;
+        b = second_largest_component;
+    }
+    
+    double lightness_offset = lightness - chroma / 2;
+    *red = (int) round((r + lightness_offset) * 255);
+    *green = (int) round((g + lightness_offset) * 255);
+    *blue = (int) round((b + lightness_offset) * 255);
+}
+
+
 void drawCircle(SDL_Renderer *canvas, int array[], int arrayLength) {
 	clearScreen(canvas);
 
@@ -94,23 +133,25 @@ void drawCircle(SDL_Renderer *canvas, int array[], int arrayLength) {
 	for (int i = 0; i < arrayLength; ++i) {
 		const double deltaAngle = 2 * PI / arrayLength;
 		const double angle = i * deltaAngle;
-		const int color = 255 * array[i] / max;
+		const double ratio = (double) array[i] / max;
+		int red = 255, green = 255, blue = 255;
+		hsl2rgb(ratio, 0.5, 0.5, &red, &green, &blue);
 
 		SDL_Vertex triangle[3] = {
 			{
-				{centerX, centerY},
-				{ 0, color, 255, 0xFF},
-				{0.f, 0.f}
+				{ centerX, centerY },
+				{ red, green, blue, 0xFF },
+				{ 0.f, 0.f }
 			},
 			{
-				{centerX + radius * cos(angle), centerY + radius * sin(angle)},
-				{ 0, color, 255, 0xFF},
-				{0.f, 0.f}
+				{ centerX + radius * cos(angle), centerY + radius * sin(angle) },
+				{ red, green, blue, 0xFF },
+				{ 0.f, 0.f }
 			},
 			{
-				{centerX + radius * cos(angle + deltaAngle), centerY + radius * sin(angle + deltaAngle)},
-				{ 0, color, 255, 0xFF},
-				{0.f, 0.f}
+				{ centerX + radius * cos(angle + deltaAngle), centerY + radius * sin(angle + deltaAngle) },
+				{ red, green, blue, 0xFF },
+				{ 0.f, 0.f }
 			},
 		};
 
