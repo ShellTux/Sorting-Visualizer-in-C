@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -Wextra -g -Og -lSDL2
+CFLAGS=-Wall -Wextra -g -Og -lSDL2 -lm
 CFILES=main.c drawing.c sorting.c
 DEPS=dimensions.h
 OBJECTS=main.o
