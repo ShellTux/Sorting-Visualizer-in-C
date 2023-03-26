@@ -10,12 +10,58 @@ videos on youtube.
 
 ## Installation
 
+### Prerequesites
+
 To install and run the program,
 you will need to have the SDL2 library installed on your system.
-You can download the library from the official SDL website here.
+You can download the library from the official SDL website [here](https://wiki.libsdl.org/SDL2/Installation).
+
+#### Windows
+
+1. Download the SDL2 development libraries from the official website: https://github.com/libsdl-org/SDL/releases/
+2. Extract the downloaded archive and navigate to the "lib" folder.
+3. Copy the contents of the "lib" folder to your project's lib directory.
+4. Copy the contents of the "include" folder to your project's include directory.
+
+#### MacOS
+
+Installing through homebrew
+
+```bash
+brew install sdl2
+```
+
+#### GNU/Linux
+
+##### Ubuntu/Debian
+
+```bash
+sudo apt-get install libsdl2-dev
+```
+
+##### CentOS/Fedora
+
+```bash
+sudo dnf install SDL2-devel
+```
+
+##### Arch Linux
+
+```bash
+sudo pacman -S sdl2
+```
+
+##### Gentoo Linux
+
+```bash
+sudo emerge -av media-libs/libsdl2
+```
+
+### Compile and run the project
 
 Once you have downloaded and installed the SDL2 library,
 you can clone this repository and run the program using the following commands:
+
 
 ```bash
 git clone https://github.com/ShellTux/Sorting-Visualizer-in-C
