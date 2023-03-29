@@ -76,6 +76,15 @@ After compiling to just run the program, just:
 ./main.o
 ```
 
+You can also run the program using a specific algorithm and visualizing method,
+for example:
+
+```bash
+./main.o "Quick Sort" "Colored Circle"
+```
+
+For other algorithms see [Usage section](#usage)
+
 ## Usage
 
 The following sorting algorithms are currently supported by the program:
