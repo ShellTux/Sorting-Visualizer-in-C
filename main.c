@@ -17,6 +17,24 @@ SDL_Renderer *renderer = NULL;
 extern int array[NUMBER_OF_ELEMENTS];
 extern char *visualizer;
 void drawBars(SDL_Renderer *canvas, int array[], int arrayLength, Uint8 defaultColorR, Uint8 defaultColorG, Uint8 defaultColorB, int highlightedPositions[], int numberOfHighlighted, Uint8 highlightColorR, Uint8 highlightColorG, Uint8 highlightColorB);
+char *visualizerTypes[] = {
+	"Bars",
+	"Colored Circle"
+};
+
+char *algorithms[] = { 
+	"Quick Sort", 
+	"Selection Sort",
+	/* "Bubble Sort", */
+	/* "Heap Sort", */
+	/* "Radix Sort", */
+	/* "Shell Sort", */
+	/* "Comb Sort", */
+	/* "Cocktail Sort", */
+	/* "Cycle Sort", */
+	/* "Odd-Even Sort", */
+	/* "Gnome Sort" */
+};
 
 void printArray(int array[], int arrayLength) {
 	printf("[ ");
@@ -27,7 +45,33 @@ void printArray(int array[], int arrayLength) {
 	printf("]\n");
 }
 
-int main(void) {
+void visualize(char *algorithm, char *visualizerMethod) {
+	char title[100] = "";
+	strcat(title, algorithm);
+	strcat(title, " | ");
+	strcat(title, visualizerMethod);
+
+	printf("Algorithm: %s\n", algorithm);
+	visualizer = visualizerMethod;
+
+
+	// Shuffle
+	SDL_SetWindowTitle(window, "Shuffling Array...");
+	shuffleArray(array, NUMBER_OF_ELEMENTS);
+	printf("Shuffled Array: ");
+	printArray(array, NUMBER_OF_ELEMENTS);
+
+
+	// Sort
+	SDL_SetWindowTitle(window, title);
+	sortVisualizer(renderer, array, NUMBER_OF_ELEMENTS, visualizerMethod, algorithm);
+	printf("Sorted Array: ");
+	printArray(array, NUMBER_OF_ELEMENTS);
+
+	printf("\n");
+}
+
+int main(int argc, char *argv[]) {
 	srand(time(NULL));
 
 
@@ -39,52 +83,15 @@ int main(void) {
 	// Initialize Array it should be normalized if
 	// in the future we intend to use other sorting visualizers
 	initializeArray(array, NUMBER_OF_ELEMENTS, 0, NUMBER_OF_ELEMENTS);
-	
-	char visualizerTypes[][15] = {
-		"Bars",
-		"Colored Circle"
-	};
 
-	char algorithms[][20] = { 
-		"Quick Sort", 
-		"Selection Sort",
-		"Bubble Sort",
-		"Heap Sort",
-		"Radix Sort",
-		"Shell Sort",
-		"Comb Sort",
-		"Cocktail Sort",
-		"Cycle Sort",
-		"Odd-Even Sort",
-		"Gnome Sort"
-	};
+	if (argc >= 3) {
+		visualize(*(argv + 1), *(argv + 2));
+		return 0;
+	}
 
 	for (long unsigned int visualizerTypeIndex = 0; visualizerTypeIndex < sizeof(visualizerTypes) / sizeof(visualizerTypes[0]) ; ++visualizerTypeIndex) 
-		for (long unsigned int algorithmIndex = 0; algorithmIndex < sizeof(algorithms) / sizeof(algorithms[0]); ++algorithmIndex) {
-			char title[100] = "";
-			strcat(title, algorithms[algorithmIndex]);
-			strcat(title, " | ");
-			strcat(title, visualizerTypes[visualizerTypeIndex]);
-
-			printf("Algorithm: %s\n", algorithms[algorithmIndex]);
-			visualizer = visualizerTypes[visualizerTypeIndex];
-
-			
-			// Shuffle
-			SDL_SetWindowTitle(window, "Shuffling Array...");
-			shuffleArray(array, NUMBER_OF_ELEMENTS);
-			printf("Shuffled Array: ");
-			printArray(array, NUMBER_OF_ELEMENTS);
-
-
-			// Sort
-			SDL_SetWindowTitle(window, title);
-			sortVisualizer(renderer, array, NUMBER_OF_ELEMENTS, visualizerTypes[visualizerTypeIndex], algorithms[algorithmIndex]);
-			printf("Sorted Array: ");
-			printArray(array, NUMBER_OF_ELEMENTS);
-
-			printf("\n");
-		}
+		for (long unsigned int algorithmIndex = 0; algorithmIndex < sizeof(algorithms) / sizeof(algorithms[0]); ++algorithmIndex) 
+			visualize(algorithms[algorithmIndex], visualizerTypes[visualizerTypeIndex]);
 
 
 	// Clean up
