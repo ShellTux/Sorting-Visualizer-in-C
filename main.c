@@ -25,15 +25,15 @@ char *visualizerTypes[] = {
 char *algorithms[] = { 
 	"Quick Sort", 
 	"Selection Sort",
-	/* "Bubble Sort", */
-	/* "Heap Sort", */
-	/* "Radix Sort", */
-	/* "Shell Sort", */
-	/* "Comb Sort", */
-	/* "Cocktail Sort", */
-	/* "Cycle Sort", */
-	/* "Odd-Even Sort", */
-	/* "Gnome Sort" */
+	"Bubble Sort",
+	"Heap Sort",
+	"Radix Sort",
+	"Shell Sort",
+	"Comb Sort",
+	"Cocktail Sort",
+	"Cycle Sort",
+	"Odd-Even Sort",
+	"Gnome Sort"
 };
 
 void printArray(int array[], int arrayLength) {
