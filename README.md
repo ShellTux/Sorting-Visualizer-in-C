@@ -33,29 +33,12 @@ brew install sdl2
 
 #### GNU/Linux
 
-##### Ubuntu/Debian
-
-```bash
-sudo apt-get install libsdl2-dev
-```
-
-##### CentOS/Fedora
-
-```bash
-sudo dnf install SDL2-devel
-```
-
-##### Arch Linux
-
-```bash
-sudo pacman -S sdl2
-```
-
-##### Gentoo Linux
-
-```bash
-sudo emerge -av media-libs/libsdl2
-```
+platform | install command
+--- | ---
+Ubuntu/Debian | `apt-get install libsdl2-dev`
+CentOS/Fedora | `dnf install SDL2-devel`
+Arch Linux    | `pacman -S sdl2`
+Gentoo Linux  | `emerge -av media-libs/libsdl2`
 
 ### Compile and run the project
 
